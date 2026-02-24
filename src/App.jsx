@@ -24,7 +24,7 @@ function App() {
       const sheetname = workbook.SheetNames[0]
       const worksheet = workbook.Sheets[sheetname]
       const emaillist = XLSX.utils.sheet_to_json(worksheet, { header: 'A' })
-      const totalemails = emaillist.map(function(item){return item.A})
+      const totalemails = emaillist.map(function (item) { return item.A })
       setemaillist(totalemails)
       console.log(totalemails)
     }
@@ -32,25 +32,27 @@ function App() {
     reader.readAsBinaryString(file)
   }
 
- function send() {
-  setstatus(true);
+  function send() {
+    setstatus(true);
 
-  axios
-    .post("https://bulk-maild-backend.onrender.com/", { msg, emaillist })
-    .then((res) => {
-      if (res.data.success === true) {
-        alert("Email Sent Successfully");
-      } else {
-        alert("Error in sending email");
-      }
-      setstatus(false);
-    })
-    .catch((err) => {
-      console.log(err);
-      alert("Server Error");
-      setstatus(false);
-    });
-}
+    axios.post(
+      `${import.meta.env.VITE_BACKEND_URL}/sendmail`,
+      { msg, emaillist }
+    )
+      .then((res) => {
+        if (res.data.success === true) {
+          alert("Email Sent Successfully");
+        } else {
+          alert("Error in sending email");
+        }
+        setstatus(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("Server Error");
+        setstatus(false);
+      });
+  }
 
   return (
     <div>
